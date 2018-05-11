@@ -1,6 +1,6 @@
 <?php
-  include_once $_SERVER['DOCUMENT_ROOT'] . '/never-note/lib/db.php';
   session_start();
+  include_once $_SERVER['DOCUMENT_ROOT'] . '/never-note/lib/db.php';
 ?> 
 
 <!DOCTYPE html>
@@ -11,11 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="/../web-assets/css/bootstrap.min.css?>"> <!--I don't know why that href works necessarily. -->
+  <link rel="stylesheet" href="/web-assets/css/bootstrap.min.css">
 
   <title><?php echo $page_title ?></title>
 </head>
 <body>
-  <?php include_once "app_nav.php"; ?>
+  <?php include_once "/web-assets/tpl/app_nav.php"; ?>
   <div class="container">
     <br>
