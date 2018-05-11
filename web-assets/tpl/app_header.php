@@ -16,6 +16,6 @@
   <title><?php echo $page_title ?></title>
 </head>
 <body>
-  <?php include_once "/web-assets/tpl/app_nav.php"; ?>
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . "/web-assets/tpl/app_nav.php"; ?>
   <div class="container">
     <br>
