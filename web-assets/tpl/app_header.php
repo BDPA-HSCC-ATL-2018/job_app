@@ -22,5 +22,5 @@
 </head>
 <body>
   <?php include_once $_SERVER['DOCUMENT_ROOT'] . "/web-assets/tpl/app_nav.php"; ?>
-  <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/lib/db.php'; ?>
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . "/job_app/lib/db.php'; ?>
   <div class="container-fluid">
