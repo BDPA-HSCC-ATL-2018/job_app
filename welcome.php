@@ -3,6 +3,7 @@ $page_title = "Processing Application";
 
 $email_id= isset($_REQUEST['email_id']) ? $_REQUEST['email_id'] : null;
 
+
 $errors = array();
 
 if ( empty($email_id) ) { $errors[] = 'Email address is required'; }
@@ -54,7 +55,8 @@ return;
 }
 
 if ( mysqli_num_rows($sth) > 0 ) {
-  #_SESSION
+  $_SESSION['email_id'] = '$email_id';
+
     while ($row = mysqli_fetch_array($sth)) {
       foreach( $row AS $key => $val ) {
         $$key = stripslashes($val);
@@ -66,7 +68,7 @@ if ( mysqli_num_rows($sth) > 0 ) {
     <div class="card">
       <div class="card-header">Application Progress</div>
       <table class="table table-sm">
-        <tr><th>Applicant Profile</th> <td><a class="btn btn-primary" href="/job_app/?action=edit_profile" >Edit</a></td></tr>
+        <tr><th>Applicant Profile</th> <td><a class="btn btn-primary" href="/job_app/?action=edit_profile">Edit</a></td></tr>
         <tr><th>Education</th> <td><a class="btn btn-primary" href="/job_app/?action=add_edu" >Add</a></td></tr>
         <tr><th>Employment</th> <td><a class="btn btn-primary" href="/job_app/?action=add_emp" >Add</a></td></tr>
       </table>

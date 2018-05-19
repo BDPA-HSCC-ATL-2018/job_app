@@ -82,6 +82,41 @@ function editApplicant($email_id=null) {
   $postal_cd,
   $agreement_sw,
   $page_title;
+
+  $sql =<<<HereDoc
+select
+  applicant_id,
+  first_name,
+  middle_name,
+  last_name,
+  ssn,
+  date_of_birth,
+  pri_phone,
+  address_line_one,
+  city_name,
+  state_cd,
+  postal_cd,
+  agreement_sw
+from applicants
+where email_id='$email_id'
+
+HereDoc;
+
+  if ( !$sth = mysqli_query($dbh,$sql) ) {
+  $message= mysqli_error($dbh);
+    echo <<<HereDoc
+      <div class="alert alert-warning"> $message </div>
+HereDoc;
+  return;
+  }
+
+  if ( mysqli_num_rows($sth) > 0 ) {
+    while ($row = mysqli_fetch_array($sth)) {
+      foreach( $row AS $key => $val ) {
+        $$key = stripslashes($val);
+      }
+    }
+  }
   include_once __DIR__ . '/forms/applicant_form.php';
 }
 
