@@ -1,9 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-<a class="navbar-brand" href="/never-note/">NeverNote</a>
-<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-<span class="navbar-toggler-icon"></span>
-</button>
-</form> 
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/job_app/">Job App</a>
+  <a href="/job_app/index.php?action=logout" class="btn btn-primary">Logout</a>
 </nav>
-<br/>
-<div class="container-fluid">
+<div class="container">
+<br>
