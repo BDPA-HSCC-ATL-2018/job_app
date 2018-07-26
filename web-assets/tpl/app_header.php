@@ -10,17 +10,16 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="/web-assets/css/bootstrap.min.css">
   <style>
-    html {
+    /*html {
       position: relative;
       min-height: 100%;
     }
     body {
       padding-top: 50px;
       margin-bottom: 80px;
-    }
+    }*/
   </style>
 </head>
 <body>
-  <?php include_once $_SERVER['DOCUMENT_ROOT'] . "/web-assets/tpl/app_nav.php"; ?>
-  <?php include_once $_SERVER['DOCUMENT_ROOT'] . "/job_app/lib/db.php'; ?>
-  <div class="container-fluid">
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . "/job_app/web-assets/tpl/app_nav.php"; ?>
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . "/job_app/web-assets/lib/db.php"; ?>
