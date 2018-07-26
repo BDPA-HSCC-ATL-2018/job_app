@@ -1,6 +1,8 @@
 <?php
 $page_title = "Processing Application";
 
+include_once $_SERVER['DOCUMENT_ROOT'] . '/job_app/web-assets/lib/db.php';
+
 $email_id= isset($_REQUEST['email_id']) ? $_REQUEST['email_id'] : null;
 
 
