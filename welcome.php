@@ -1,12 +1,15 @@
 <?php
 $page_title = "Processing Application";
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/job_app/web-assets/lib/db.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/job_app/web-assets/tpl/app_header.php';
+
 
 if (isset($_REQUEST['email_id'])) {
   $email_id = $_REQUEST['email_id'];
 } else if (isset($_SESSION['email_id'])) {
   $email_id = $_SESSION['email_id'];
+} else {
+  header("Location: /job_app/forms/welcome_form.php");
 }
 
 
@@ -62,7 +65,6 @@ return;
 }
 
 if ( mysqli_num_rows($sth) > 0 ) {
-  $_SESSION['email_id'] = $email_id; //Setting Email Session Variable
 
     while ($row = mysqli_fetch_array($sth)) {
       foreach( $row AS $key => $val ) {
@@ -101,6 +103,36 @@ if ( mysqli_num_rows($sth) > 0 ) {
 HereDoc;
     }
 } else {
+
+  // Creates an applicant
+  function applicantForm($email_id=null) {
+    global
+      $dbh,
+      $applicant_id,
+      $first_name,
+      $middle_name,
+      $last_name,
+      $ssn,
+      $date_of_birth,
+      $pri_phone,
+      $address_line_one,
+      $city_name,
+      $state_cd,
+      $postal_cd,
+      $agreement_sw;
+
+      $email_id = isset($_SESSION['email_id']) ? $_SESSION['email_id'] : $email_id;
+      if ($email_id) {
+        $sql = <<<HereDoc
+
+
+HereDoc;
+      }
+
+      $page_title="Applicant Profile";
+    include_once __DIR__ . '/forms/applicant_form.php';
+  }
+
   $_SESSION['email_id'] = null;
   applicantForm($email_id);
 }
