@@ -44,7 +44,7 @@ select
   state_cd,
   postal_cd
 from applicants
-where email_id = '$email_id'
+where email_id = "$email_id";
 
 HereDoc;
 
@@ -57,7 +57,7 @@ return;
 }
 
 if ( mysqli_num_rows($sth) > 0 ) {
-  $_SESSION['email_id'] = '$email_id';
+  $_SESSION['email_id'] = "$email_id";
 
     while ($row = mysqli_fetch_array($sth)) {
       foreach( $row AS $key => $val ) {

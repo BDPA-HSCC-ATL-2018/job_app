@@ -14,40 +14,57 @@
   $city_name = "";
   $postal_cd = "";
 
-  if (isset($_REQUEST['edit']) && ($_REQUEST['edit']) == 'edit') {
-    $first_name = $_SESSION['first_name'];
-    $middle_name = $_SESSION['middle_name'];
-    $last_name = $_SESSION['last_name'];
-    $email_id = $_SESSION['email_id'];
-    $pri_phone = $_SESSION['phone'];
-    $ssn = $_SESSION['ssn'];
-    $date_of_birth = $_SESSION['dob'];
-    $address_line_one = $_SESSION['address'];
-    $city_name = $_SESSION['city'];
-    $postal_cd = $_SESSION['zip_code'];
-  }
-
-//Editing Profile
-$edit_profile =<<<EDIT
-  <form id="applicant" method="post" action="/job_app/index.php?action=edit" class="needs-validation" novalidate>
+  $edit_profile =<<<EDIT
+    <form id="applicant" method="post" action="/job_app/index.php?action=edit" class="needs-validation" novalidate>
 EDIT;
 
-$create_profile =<<<CREATE
-  <form id="applicant" method="post" action="/job_app/index.php?action=create" class="needs-validation" novalidate>
+  $create_profile =<<<CREATE
+    <form id="applicant" method="post" action="/job_app/index.php?action=create" class="needs-validation" novalidate>
 CREATE;
+
+  if (isset($_REQUEST['edit']) && ($_REQUEST['edit']) == 'edit') {
+    $email_id = $_SESSION['email_id'];
+
+    $edit_profile_sql = <<<EDITPROF
+      SELECT * FROM applicants WHERE email_id = "$email_id";
+EDITPROF;
+
+    $edit_profile_result = $dbh->query($edit_profile_sql);
+
+    while ($edit_profile_row = $edit_profile_result->fetch_assoc()) {
+      $first_name = $edit_profile_row['first_name'];
+      $middle_name = $edit_profile_row['middle_name'];
+      $last_name = $edit_profile_row['last_name'];
+      $email_id = $edit_profile_row['email_id'];
+      $pri_phone = $edit_profile_row['pri_phone'];
+      $ssn = $edit_profile_row['ssn'];
+      $date_of_birth = $edit_profile_row['date_of_birth'];
+      $address_line_one = $edit_profile_row['address_line_one'];
+      $city_name = $edit_profile_row['city_name'];
+      $postal_cd = $edit_profile_row['postal_cd'];
+    }
+
+    echo $edit_profile;
+  } else {
+    echo $create_profile;
+    mysqli_error($dbh);
+  }
+
 ?>
 
   <div class="card">
     <div class="card-header bg-info text-white">Applicant</div>
     <div class="card-body">
       <div class="form-group row">
+        <!-- First Name -->
         <label for="first_name" class="col-md-2 col-form-label">First Name</label>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $first_name ?>" required/>
-          <div class="invalid-feedback">Dude, you need a First Name </div>
+          <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo "$first_name" ?>" required/>
+          <div class="invalid-feedback">Dude, you need a First Name</div>
         </div>
       </div>
 
+      <!-- Middle Name -->
       <div class="form-group row">
         <label for="middle_name" class="col-md-2 col-form-label">Middle Name</label>
         <div class="col-md-6">
@@ -55,14 +72,16 @@ CREATE;
         </div>
       </div>
 
+      <!-- Last Name -->
       <div class="form-group row">
-        <label for="last_name" class="col-md-2 col-form-label">Last</label>
+        <label for="last_name" class="col-md-2 col-form-label">Last Name</label>
         <div class="col-md-6">
           <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $last_name ?>" required/>
           <div class="invalid-feedback">Last Name is required</div>
         </div>
       </div>
 
+      <!-- Email -->
       <div class="form-group row">
         <label for="email_id" class="col-md-2 col-form-label">Email</label>
         <div class="col-md-6">
@@ -71,6 +90,7 @@ CREATE;
         </div>
       </div>
 
+      <!-- Phone -->
       <div class="form-group row">
         <label for="pri_phone" class="col-md-2 col-form-label">Phone</label>
         <div class="col-md-6">
@@ -78,6 +98,7 @@ CREATE;
         </div>
       </div>
 
+      <!-- SSN -->
       <div class="form-group row">
         <label for="ssn" class="col-md-2 col-form-label">SSN</label>
         <div class="col-md-6">
@@ -86,6 +107,7 @@ CREATE;
         </div>
       </div>
 
+      <!-- Date of Birth -->
       <div class="form-group row">
         <label for="date_of_birth" class="col-md-2 col-form-label">Date of Birth</label>
         <div class="col-md-6">
@@ -102,6 +124,8 @@ CREATE;
   <div class="card">
     <div class="card-header bg-info text-white">Address</div>
     <div class="card-body">
+
+      <!-- Address -->
       <div class="form-group row">
         <label for="address_line_one" class="col-md-2 col-form-label">Address</label>
         <div class="col-md-6">
@@ -110,6 +134,7 @@ CREATE;
         </div>
       </div>
 
+      <!-- City -->
       <div class="form-group row">
         <label for="city_name" class="col-md-2 col-form-label">City</label>
         <div class="col-md-6">
@@ -118,6 +143,7 @@ CREATE;
         </div>
       </div>
 
+      <!-- State -->
       <div class="form-group row">
         <label for="state_cd" class="col-md-2 col-form-label">State</label>
         <div class="form-group col-md-6">
@@ -130,6 +156,7 @@ CREATE;
         </div>
       </div>
 
+      <!-- Zip -->
       <div class="form-group row">
         <label for="postal_cd" class="col-md-2 col-form-label">Zip</label>
         <div class="col-md-6">
@@ -147,7 +174,6 @@ CREATE;
       <div class="form-group">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="agreement_sw" name="agreement_sw" value="Y" required>
-          <input type="hidden" id="action" name="action" value="applicant-info"/>
           <label class="form-check-label" for="agreement_sw">All information provided is true and correct to the best of my knowledge</label>
           <div class="invalid-feedback">You must certify that information provided is true and accurate to the best of your knowledge</div>
         </div>

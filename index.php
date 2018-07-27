@@ -10,7 +10,7 @@ $options = array(
   'add_edu' => 'educationInfo',
   'add_emp' => 'employmentInfo',
   'welcome' => 'welcome',
-  'edit' => 'edit', //This edit will ch ange the database values.
+  'edit' => 'editProfile', //This edit will change the database values.
   'logout' => 'logout'
 );
 
@@ -18,6 +18,7 @@ if (array_key_exists($action, $options)) {
   $function = $options[$action];
   call_user_func($function);
 } else {
+  echo $_REQUEST['action'];
   welcomeForm();
 }
 
@@ -28,17 +29,18 @@ function welcomeForm() {
   if ( isset($_SESSION['email_id']) && !empty($_SESSION['email_id'])) {
     welcome();
   } else {
+    $page_title = "Welcome";
     include_once __DIR__ . '/forms/welcome_form.php';
   }
 }
 
-//Welcome Page - The first page the user sees after logging in; has all the user info
+// Welcome Page - The first page the user sees after logging in; has all the user info
 function welcome() {
   global $dbh;
   include_once __DIR__ . '/welcome.php';
 }
 
-//Creates an applicant
+// Creates an applicant
 function applicantForm($email_id=null) {
   global
     $dbh,
@@ -68,7 +70,7 @@ HereDoc;
 }
 
 //Edit Applicant - Edits an existing user.
-function editApplicant($email_id=null) {
+function editApplicant() {
   global $dbh,
   $applicant_id,
   $first_name,
@@ -84,7 +86,7 @@ function editApplicant($email_id=null) {
   $agreement_sw,
   $page_title;
 
-  $sql =<<<HereDoc
+  $sql = <<<HereDoc
 select
   applicant_id,
   first_name,
@@ -118,7 +120,7 @@ HereDoc;
       }
     }
   }
-  include_once __DIR__ . '/forms/applicant_form.php';
+  header("Location: /job_app/forms/applicant_form.php?edit=edit");
 }
 
 //Aplicant Info
@@ -127,16 +129,75 @@ function applicantInfo() {
   include_once __DIR__ . '/applicant.php';
 }
 
-//Education Info
+// Education Info
 function educationInfo() {
   global $dbh;
   include_once __DIR__ . '/forms/education.php';
 }
 
-//Employment Info
+// Employment Info
 function employmentInfo() {
   global $dbh;
   include_once __DIR__ . '/forms/employment.php';
+}
+
+//Edit
+function editProfile() {
+  global $dbh;
+  $email_id = $_SESSION['email_id'];
+
+  $first_name = $_REQUEST['first_name'];
+  $middle_name = $_REQUEST['middle_name'];
+  $last_name = $_REQUEST['last_name'];
+  $email_id_change = $_REQUEST['email_id'];
+  $ssn = $_REQUEST['ssn'];
+  $date_of_birth = $_REQUEST['date_of_birth'];
+  $pri_phone = $_REQUEST['pri_phone'];
+  $address_line_one = $_REQUEST['address_line_one'];
+  $city_name = $_REQUEST['city_name'];
+  $state_cd = $_REQUEST['state'];
+  $postal_cd = $_REQUEST['postal_cd'];
+
+  $edit_profile_sql = <<<EDITPROF
+    UPDATE applicants
+    SET first_name = "$first_name",
+    last_name = "$last_name",
+    email_id = "$email_id_change",
+    ssn = "$ssn",
+    date_of_birth = "$date_of_birth",
+    pri_phone = "$pri_phone",
+    address_line_one = "$address_line_one",
+    city_name = "$city_name",
+    state_cd = "$state_cd",
+    postal_cd = "$postal_cd"
+    WHERE email_id = "$email_id";
+EDITPROF;
+
+    $edit_profile_result = $dbh->query($edit_profile_sql);
+
+    if ($edit_profile_result) {
+      //Now change the session email.
+      $_SESSION['email_id'] = $email_id_change;
+
+      //Go to the main page.
+      welcome();
+    } else {
+      echo "Error <br>";
+      echo "First Name: " . $first_name . "<br>";
+      echo "Middle Name: " . $middle_name . "<br>";
+      echo "Last Name: " . $last_name . "<br>";
+      echo "Email: " . $email_id . "<br>";
+      echo "Email Change: " . $email_id_change . "<br>";
+      echo "SSN: " . $ssn . "<br>";
+      echo "Date of Birth: " . $date_of_birth . "<br>";
+      echo "Primary Phone: " . $pri_phone . "<br>";
+      echo "Address: " . $address_line_one . "<br>";
+      echo "City: " . $city_name . "<br>";
+      echo "State: " . $state_cd . "<br>";
+      echo "Zip Code: " . $postal_cd . "<br>";
+      echo $_SESSION['email_id'];
+      mysqli_error($dbh);
+    }
 }
 
 //Logout
