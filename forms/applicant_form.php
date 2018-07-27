@@ -59,7 +59,7 @@ EDITPROF;
         <!-- First Name -->
         <label for="first_name" class="col-md-2 col-form-label">First Name</label>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo "$first_name" ?>" required/>
+          <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $first_name ?>" required/>
           <div class="invalid-feedback">Dude, you need a First Name</div>
         </div>
       </div>
@@ -147,10 +147,10 @@ EDITPROF;
       <div class="form-group row">
         <label for="state_cd" class="col-md-2 col-form-label">State</label>
         <div class="form-group col-md-6">
-          <select name="state" class="form-control">
-            <option value="GA">Georgia</option>
-            <option value="NY">New York</option>
-            <option value="TX">Texas</option>
+          <select name="state_cd" class="form-control">
+            <option value="Georgia">Georgia</option>
+            <option value="New York">New York</option>
+            <option value="Texas">Texas</option>
           </select>
           <div class="invalid-feedback">State is required</div>
         </div>
