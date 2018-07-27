@@ -13,6 +13,8 @@ $options = array(
   'edit' => 'editProfile', //This edit will change the database values.
   'createeduhistory' => 'createeduhistory', //Create Education History
   'createemphistory' => 'createemphistory', //Create Employment History
+  'deleteeducation' => 'deleteEducation', //Deletes an education record from the database.
+  'deleteemployment' => 'deleteEmployment', //Deletes an employment record from the database.
   'logout' => 'logout'
 );
 
@@ -261,6 +263,46 @@ SQL;
     echo "Phone: " . $e_phone . "<br>";
     echo $_SESSION['email_id'];
     mysqli_error($dbh);
+  }
+}
+
+//Delete Education
+function deleteEducation() {
+  global $dbh;
+
+  $applicant_id = $_SESSION['applicant_id'];
+  $i_id = $_REQUEST['id'];
+
+  $delete_education_sql = <<<SQL
+    DELETE FROM education WHERE applicant_id = $applicant_id AND i_id = $i_id;
+SQL;
+
+  $delete_education_result = $dbh->query($delete_education_sql);
+
+  if ($delete_education_result) {
+    welcome();
+  } else {
+    echo "An error occured. Please try again.";
+  }
+}
+
+//Delete Employment
+function deleteEmployment() {
+  global $dbh;
+
+  $applicant_id = $_SESSION['applicant_id'];
+  $e_id = $_REQUEST['id'];
+
+  $delete_employemnt_sql = <<<SQL
+    DELETE FROM employment WHERE applicant_id = $applicant_id AND id = $e_id;
+SQL;
+
+  $delete_employment_result = $dbh->query($delete_employemnt_sql);
+
+  if ($delete_employment_result) {
+    welcome();
+  } else {
+    echo "An error occured. Please try again.";
   }
 }
 
