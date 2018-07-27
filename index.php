@@ -6,11 +6,12 @@ $action = (isset($_REQUEST['action']) ? $_REQUEST['action'] : 'default');
 
 $options = array(
   'applicantinfo' => 'applicantInfo',
-  'edit_profile' => 'editApplicant',
+  'edit_profile' => 'editApplicant', //The main purpose of this function is to redirect to the forms/applicant_form.php page and tell that page that it wants to edit the profile.
   'add_edu' => 'educationInfo',
   'add_emp' => 'employmentInfo',
   'welcome' => 'welcome', //The first page the user sees after logging in; has all the user info
-  'edit' => 'editProfile', //Edit Profile - Edits an Existing User's Profile Information
+  'create' => 'createUser', //Creates a new user
+  'edit' => 'editProfile', //Edits an Existing User's Profile Information
   'createeduhistory' => 'createeduhistory', //Create Education History
   'createemphistory' => 'createemphistory', //Create Employment History
   'deleteeducation' => 'deleteEducation', //Deletes an education record from the database.
@@ -74,22 +75,143 @@ HereDoc;
   include_once __DIR__ . '/forms/applicant_form.php';
 }
 
-//Aplicant Info
+//Edit Applicant - Edits an existing user.
+function editApplicant() {
+  global $dbh,
+  $applicant_id,
+  $first_name,
+  $middle_name,
+  $last_name,
+  $ssn,
+  $date_of_birth,
+  $pri_phone,
+  $address_line_one,
+  $city_name,
+  $state_cd,
+  $postal_cd,
+  $agreement_sw,
+  $page_title;
+  $sql = <<<HereDoc
+select
+  applicant_id,
+  first_name,
+  middle_name,
+  last_name,
+  ssn,
+  date_of_birth,
+  pri_phone,
+  address_line_one,
+  city_name,
+  state_cd,
+  postal_cd,
+  agreement_sw
+from applicants
+where email_id='$email_id'
+HereDoc;
+  if ( !$sth = mysqli_query($dbh,$sql) ) {
+  $message= mysqli_error($dbh);
+    echo <<<HereDoc
+      <div class="alert alert-warning"> $message </div>
+HereDoc;
+  return;
+  }
+  if ( mysqli_num_rows($sth) > 0 ) {
+    while ($row = mysqli_fetch_array($sth)) {
+      foreach( $row AS $key => $val ) {
+        $$key = stripslashes($val);
+      }
+    }
+  }
+  header("Location: /job_app/forms/applicant_form.php?edit=edit");
+}
+
+//Aplicant Info Website
 function applicantInfo() {
   global $dbh;
   include_once __DIR__ . '/applicant.php';
 }
 
-// Education Info
+// Education Info Website
 function educationInfo() {
   global $dbh;
   include_once __DIR__ . '/forms/education_history.php';
 }
 
-// Employment Info
+// Employment Info Website
 function employmentInfo() {
   global $dbh;
   include_once __DIR__ . '/forms/employment_history.php';
+}
+
+//Create User
+function createUser() {
+  global $dbh;
+
+  $first_name= isset($_REQUEST['first_name']) ? $_REQUEST['first_name'] : null;
+  $middle_name= isset($_REQUEST['middle_name']) ? $_REQUEST['middle_name'] : null;
+  $last_name= isset($_REQUEST['last_name']) ? $_REQUEST['last_name'] : null;
+  $ssn= isset($_REQUEST['ssn']) ? $_REQUEST['ssn'] : null;
+  $date_of_birth= isset($_REQUEST['date_of_birth']) ? $_REQUEST['date_of_birth'] : null;
+  $pri_phone= isset($_REQUEST['pri_phone']) ? $_REQUEST['pri_phone'] : null;
+  $email_id= isset($_REQUEST['email_id']) ? $_REQUEST['email_id'] : null;
+  $address_line_one= isset($_REQUEST['address_line_one']) ? $_REQUEST['address_line_one'] : null;
+  $city_name= isset($_REQUEST['city_name']) ? $_REQUEST['city_name'] : null;
+  $state_cd= isset($_REQUEST['state_cd']) ? $_REQUEST['state_cd'] : null;
+  $postal_cd= isset($_REQUEST['postal_cd']) ? $_REQUEST['postal_cd'] : null;
+
+  $sql=<<<HereDoc
+    INSERT INTO applicants(
+      first_name,
+      middle_name,
+      last_name,
+      ssn,
+      date_of_birth,
+      pri_phone,
+      email_id,
+      address_line_one,
+      city_name,
+      state_cd,
+      postal_cd
+      ) values (
+        "$first_name",
+        "$middle_name",
+        "$last_name",
+        "$ssn",
+        "$date_of_birth",
+        "$pri_phone",
+        "$email_id",
+        "$address_line_one",
+        "$city_name",
+        "$state_cd",
+        "$postal_cd"
+      );
+HereDoc;
+
+    $result = $dbh->query($sql);
+
+    if ($result) {
+      $id_sql = <<<SQL
+        SELECT applicant_id FROM applicants WHERE email_id = "$email_id";
+SQL;
+
+      $id_result = $dbh->query($id_sql);
+
+      if ($id_result) {
+        if ($id_row = $id_result->fetch_assoc()) {
+          $_SESSION['applicant_id'] = $id_row['applicant_id'];
+          $_SESSION['email_id'] = $email_id;
+        } else {
+          echo "There was an error retrieving the user's id.";
+        }
+      } else {
+        echo'There was an error with $id_sql';
+      }
+
+      welcome();
+    } else {
+      echo "Error";
+      echo mysqli_error($dbh);
+    }
 }
 
 //Edit Profile - Edits an Existing User's Profile Information
@@ -106,7 +228,7 @@ function editProfile() {
   $pri_phone = $_REQUEST['pri_phone'];
   $address_line_one = $_REQUEST['address_line_one'];
   $city_name = $_REQUEST['city_name'];
-  $state_cd = $_REQUEST['state'];
+  $state_cd = $_REQUEST['state_cd'];
   $postal_cd = $_REQUEST['postal_cd'];
 
   $edit_profile_sql = <<<EDITPROF
@@ -171,7 +293,7 @@ SQL;
   $create_edu_history_result = $dbh->query($create_edu_history_sql);
 
   if ($create_edu_history_result) {
-    welcome();
+    header("Location: /job_app/view_education_records.php");
   } else {
     echo "Error";
     mysqli_error($dbh);
@@ -200,7 +322,7 @@ SQL;
   $create_emp_history_result = $dbh->query($create_emp_history_sql);
 
   if ($create_emp_history_result) {
-    welcome();
+    header("Location: /job_app/view_employment_records.php");
   } else {
     echo "Error <br>";
     echo "Name: " . $e_name . "<br>";
@@ -216,7 +338,7 @@ SQL;
   }
 }
 
-//Delete Education
+//Delete Education - Deletes an education record from the database.
 function deleteEducation() {
   global $dbh;
 
@@ -230,13 +352,13 @@ SQL;
   $delete_education_result = $dbh->query($delete_education_sql);
 
   if ($delete_education_result) {
-    welcome();
+    header("Location: /job_app/view_education_records.php");
   } else {
     echo "An error occured. Please try again.";
   }
 }
 
-//Delete Employment
+//Delete Employment - Deletes an employment record from the database.
 function deleteEmployment() {
   global $dbh;
 
@@ -250,13 +372,13 @@ SQL;
   $delete_employment_result = $dbh->query($delete_employemnt_sql);
 
   if ($delete_employment_result) {
-    welcome();
+    header("Location: /job_app/view_employment_records.php");
   } else {
     echo "An error occured. Please try again.";
   }
 }
 
-//Edit Education History
+//Edit Education History - Edits an education record from the database.
 function editEduHistory() {
   global $dbh;
 
@@ -289,7 +411,7 @@ SQL;
 
 }
 
-//Edit Employment History
+//Edit Employment History - Edits an employment record from the database.
 function editEmpHistory() {
   global $dbh;
 
