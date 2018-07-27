@@ -41,6 +41,7 @@ EDITPROF;
       $date_of_birth = $edit_profile_row['date_of_birth'];
       $address_line_one = $edit_profile_row['address_line_one'];
       $city_name = $edit_profile_row['city_name'];
+      $state_cd = $edit_profile_row['state_cd'];
       $postal_cd = $edit_profile_row['postal_cd'];
     }
 
@@ -49,6 +50,15 @@ EDITPROF;
     echo $create_profile;
     mysqli_error($dbh);
   }
+
+function selected($state) {
+  global $state_cd;
+
+  if ($state == $state_cd) {
+    echo "selected";
+  }
+}
+
 
 ?>
 
@@ -148,9 +158,16 @@ EDITPROF;
         <label for="state_cd" class="col-md-2 col-form-label">State</label>
         <div class="form-group col-md-6">
           <select name="state_cd" class="form-control">
-            <option value="Georgia">Georgia</option>
-            <option value="New York">New York</option>
-            <option value="Texas">Texas</option>
+            <option value="Alabama" <?php selected("Alabama") ?>>Alabama</option>
+            <option value="Alaska" <?php selected("Alaska") ?>>Alaska</option>
+            <option value="Arkansas" <?php selected("Arkansas") ?>>Arkansas</option>
+            <option value="Conneticut" <?php selected("Conneticut") ?>>Conneticut</option>
+            <option value="Delaware" <?php selected("Delaware") ?>>Delaware</option>
+            <option value="Florida" <?php selected("Florida") ?>>Florida</option>
+            <option value="Georgia" <?php selected("Georgia") ?>>Georgia</option>
+            <option value="Idaho" <?php selected("Idaho") ?>>Idaho</option>
+            <option value="Illinois" <?php selected("Illinois") ?>>Illinois</option>
+            <option value="Indiana" <?php selected("Indiana") ?>>Indiana</option>
           </select>
           <div class="invalid-feedback">State is required</div>
         </div>
