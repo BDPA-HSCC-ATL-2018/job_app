@@ -9,12 +9,14 @@ $options = array(
   'edit_profile' => 'editApplicant',
   'add_edu' => 'educationInfo',
   'add_emp' => 'employmentInfo',
-  'welcome' => 'welcome',
-  'edit' => 'editProfile', //This edit will change the database values.
+  'welcome' => 'welcome', //The first page the user sees after logging in; has all the user info
+  'edit' => 'editProfile', //Edit Profile - Edits an Existing User's Profile Information
   'createeduhistory' => 'createeduhistory', //Create Education History
   'createemphistory' => 'createemphistory', //Create Employment History
   'deleteeducation' => 'deleteEducation', //Deletes an education record from the database.
   'deleteemployment' => 'deleteEmployment', //Deletes an employment record from the database.
+  'editeduhistory' => 'editEduHistory', //Edits an education record from the database.
+  'editemphistory' => 'editEmpHistory', //Edits an employment record from the database.
   'logout' => 'logout'
 );
 
@@ -22,7 +24,6 @@ if (array_key_exists($action, $options)) {
   $function = $options[$action];
   call_user_func($function);
 } else {
-  echo $_REQUEST['action'];
   welcomeForm();
 }
 
@@ -73,60 +74,6 @@ HereDoc;
   include_once __DIR__ . '/forms/applicant_form.php';
 }
 
-//Edit Applicant - Edits an existing user.
-function editApplicant() {
-  global $dbh,
-  $applicant_id,
-  $first_name,
-  $middle_name,
-  $last_name,
-  $ssn,
-  $date_of_birth,
-  $pri_phone,
-  $address_line_one,
-  $city_name,
-  $state_cd,
-  $postal_cd,
-  $agreement_sw,
-  $page_title;
-
-  $sql = <<<HereDoc
-select
-  applicant_id,
-  first_name,
-  middle_name,
-  last_name,
-  ssn,
-  date_of_birth,
-  pri_phone,
-  address_line_one,
-  city_name,
-  state_cd,
-  postal_cd,
-  agreement_sw
-from applicants
-where email_id='$email_id'
-
-HereDoc;
-
-  if ( !$sth = mysqli_query($dbh,$sql) ) {
-  $message= mysqli_error($dbh);
-    echo <<<HereDoc
-      <div class="alert alert-warning"> $message </div>
-HereDoc;
-  return;
-  }
-
-  if ( mysqli_num_rows($sth) > 0 ) {
-    while ($row = mysqli_fetch_array($sth)) {
-      foreach( $row AS $key => $val ) {
-        $$key = stripslashes($val);
-      }
-    }
-  }
-  header("Location: /job_app/forms/applicant_form.php?edit=edit");
-}
-
 //Aplicant Info
 function applicantInfo() {
   global $dbh;
@@ -145,7 +92,7 @@ function employmentInfo() {
   include_once __DIR__ . '/forms/employment_history.php';
 }
 
-//Edit
+//Edit Profile - Edits an Existing User's Profile Information
 function editProfile() {
   global $dbh;
   $email_id = $_SESSION['email_id'];
@@ -165,6 +112,7 @@ function editProfile() {
   $edit_profile_sql = <<<EDITPROF
     UPDATE applicants
     SET first_name = "$first_name",
+    middle_name = "$middle_name",
     last_name = "$last_name",
     email_id = "$email_id_change",
     ssn = "$ssn",
@@ -204,6 +152,7 @@ EDITPROF;
     }
 }
 
+//Create Education History
 function createeduhistory() {
   global $dbh;
 
@@ -229,6 +178,7 @@ SQL;
   }
 }
 
+//Create Employment History
 function createemphistory() {
   global $dbh;
 
@@ -304,6 +254,79 @@ SQL;
   } else {
     echo "An error occured. Please try again.";
   }
+}
+
+//Edit Education History
+function editEduHistory() {
+  global $dbh;
+
+  $applicant_id = $_SESSION['applicant_id'];
+  $i_id = $_REQUEST['id'];
+  $i_name = $_REQUEST['i-name'];
+  $i_type = $_REQUEST['i-type'];
+  $i_start_date = $_REQUEST['i-start-date'];
+  $i_end_date = $_REQUEST['i-end-date'];
+  $i_grad_date = $_REQUEST['i-grad-date'];
+
+  $edit_edu_history_sql = <<<SQL
+    UPDATE education
+    SET i_name = "$i_name",
+    i_type = "$i_type",
+    i_start_date = "$i_start_date",
+    i_end_date = "$i_end_date",
+    i_grad_date = "$i_grad_date"
+    WHERE i_id = $i_id AND applicant_id = $applicant_id;
+SQL;
+
+  $edit_edu_history_result = $dbh->query($edit_edu_history_sql);
+
+  if ($edit_edu_history_result) {
+    header("Location: /job_app/view_education_records.php");
+  } else {
+    echo "There was an error. Please try again.";
+    mysqli_error($dbh);
+  }
+
+}
+
+//Edit Employment History
+function editEmpHistory() {
+  global $dbh;
+
+  $applicant_id = $_SESSION['applicant_id'];
+  $e_id = $_REQUEST['id'];
+  $e_name = $_REQUEST['e-name'];
+  $e_phone = $_REQUEST['e-phone'];
+  $e_city = $_REQUEST['e-city'];
+  $e_state = $_REQUEST['e-state'];
+  $e_start_date = $_REQUEST['e-start-date'];
+  $e_end_date = $_REQUEST['e-end-date'];
+  $e_position = $_REQUEST['e-position'];
+  $e_description = $_REQUEST['e-description'];
+
+  $edit_emp_history_sql = <<<SQL
+    UPDATE employment
+    SET e_name = "$e_name",
+    e_phone  = "$e_phone",
+    e_city = "$e_city",
+    e_state = "$e_state",
+    e_start_date = "$e_start_date",
+    e_end_date = "$e_end_date",
+    e_position = "$e_position",
+    e_description = "$e_description"
+    WHERE id = $e_id AND applicant_id = $applicant_id;
+
+SQL;
+
+  $edit_emp_history_result = $dbh->query($edit_emp_history_sql);
+
+  if ($edit_emp_history_result) {
+    header("Location: /job_app/view_employment_records.php");
+  } else {
+    echo "There was an error. Please try again.";
+    mysqli_error($dbh);
+  }
+
 }
 
 //Logout

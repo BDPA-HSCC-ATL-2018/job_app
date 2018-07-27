@@ -14,7 +14,7 @@
       </div>
 
       <div class="form-group">
-        <div class= "col-md-6">
+        <div class="col-md-6">
           <input type="hidden" name="action" value="welcome">
           <button type="submit" class="btn btn-lg btn-success">Continue</button>
         </div>

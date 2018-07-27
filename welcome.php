@@ -3,7 +3,7 @@ $page_title = "Processing Application";
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/job_app/web-assets/lib/db.php';
 
-if (isset($_REQUEST['$email_id'])) {
+if (isset($_REQUEST['email_id'])) {
   $email_id = $_REQUEST['email_id'];
 } else if (isset($_SESSION['email_id'])) {
   $email_id = $_SESSION['email_id'];

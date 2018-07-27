@@ -25,7 +25,8 @@ SQL;
         <div class="card my-4">
             <div class="card-header">
               $e_name
-              <a href="index.php?action=deleteemployment&id=$e_id" class="btn btn-primary float-right">Delete</a>
+              <a href="index.php?action=deleteemployment&id=$e_id" class="btn btn-primary float-right mx-3">Delete</a>
+              <a href="/job_app/forms/employment_history.php?edit=edit&id=$e_id" class="btn btn-primary float-right">Edit</a>
             </div>
             <div class="card-body">
               Phone: $e_phone <br>

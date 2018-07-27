@@ -9,16 +9,8 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="/web-assets/css/bootstrap.min.css">
-  <style>
-    /*html {
-      position: relative;
-      min-height: 100%;
-    }
-    body {
-      padding-top: 50px;
-      margin-bottom: 80px;
-    }*/
-  </style>
+
+  <link rel="shortcut icon" href="/favicon.ico">
 </head>
 <body>
   <?php include_once $_SERVER['DOCUMENT_ROOT'] . "/job_app/web-assets/tpl/app_nav.php"; ?>

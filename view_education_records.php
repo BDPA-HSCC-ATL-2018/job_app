@@ -23,7 +23,8 @@ SQL;
         <div class="card my-4">
             <div class="card-header">
               $i_name
-              <a href="index.php?action=deleteeducation&id=$i_id" class="btn btn-primary float-right">Delete</a>
+              <a href="index.php?action=deleteeducation&id=$i_id" class="btn btn-primary float-right mx-3">Delete</a>
+              <a href="/job_app/forms/education_history.php?edit=edit&id=$i_id" class="btn btn-primary float-right">Edit</a>
             </div>
             <div class="card-body">
               Start Date: $i_start_date <br>
