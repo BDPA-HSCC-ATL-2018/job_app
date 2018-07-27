@@ -1,5 +1,5 @@
 <?php $page_title="Employment History";
-  include_once $_SERVER['DOCUMENT_ROOT'] . "/web-assets/tpl/app-header.php";
+  include_once $_SERVER['DOCUMENT_ROOT'] . "/job_app/web-assets/tpl/app_header.php";
 
   $id = "";
   $e_name = "";
@@ -30,8 +30,9 @@ SQL;
     }
   }
 
-$create_record = <<<CREATE
-<form action="../../data.php?function=create" method="post">
+?>
+
+<form action="/job_app/index.php?action=createemphistory" method="post">
   <div class="form-group">
     <label for="employer-name">Employer Name</label>
     <input type="text" class="form-control" id="employer-name" placeholder="Employer Name" name="e-name">
@@ -43,16 +44,16 @@ $create_record = <<<CREATE
   <div class="form-group">
     <label for="employment-state">State</label>
     <select class="form-control" id="employment-state" name="e-state">
-      <option>It</option>
-      <option>was</option>
-      <option>too</option>
-      <option>late</option>
-      <option>at</option>
-      <option>night</option>
-      <option>to</option>
-      <option>add</option>
-      <option>every</option>
-      <option>state.</option>
+      <option value="Alabame">Alabama</option>
+      <option value="Alaska">Alaska</option>
+      <option value="Arkansas">Arkansas</option>
+      <option value="Conneticut">Conneticut</option>
+      <option value="Delaware">Delaware</option>
+      <option value="Florida">Florida</option>
+      <option value="Georgia">Georgia</option>
+      <option value="Idaho">Idaho</option>
+      <option value="Illinois">Illinois</option>
+      <option value="Indiana">Indiana</option>
     </select>
   </div>
   <div class="form-group">
@@ -79,62 +80,7 @@ $create_record = <<<CREATE
     <input type="submit" class="form-control">
   </div>
 </form>
-CREATE;
 
-$edit_record = <<<EDIT
-<form action="/../../data.php?function=edit&eid=$id" method="post">
-  <div class="form-group">
-    <label for="employer-name">Employer Name</label>
-    <input type="text" class="form-control" id="employer-name" placeholder="Employer Name" name="e-name" value="$e_name">
-  </div>
-  <div class="form-group">
-    <label for="employment-city">City</label>
-    <input type="text" class="form-control" id="employment-city" placeholder="City" name="e-city" value="$e_city">
-  </div>
-  <div class="form-group">
-    <label for="employment-state">State</label>
-    <select class="form-control" id="employment-state" name="e-state">
-      <option>It</option>
-      <option>was</option>
-      <option>too</option>
-      <option>late</option>
-      <option>at</option>
-      <option>night</option>
-      <option>to</option>
-      <option>add</option>
-      <option>every</option>
-      <option>state.</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="start-date">Start Date</label>
-    <input type="date" class="form-control" id="start-date" name="e-start-date" value="$e_start_date">
-  </div>
-  <div class="form-group">
-    <label for="end-date">End Date</label>
-    <input type="date" class="form-control" id="end-date" name="e-end-date" value="$e_end_date">
-  </div>
-  <div class="form-group">
-    <label for="position">Position</label>
-    <input type="text" class="form-control" id="position" placeholder="Position" name="e-position" value="$e_position">
-  </div>
-  <div class="form-group">
-    <label for="job-description">Job Description</label>
-    <input type="textarea" class="form-control" id="job-description" name="e-description" value="$e_description">
-  </div>
-  <div class="form-group">
-    <label for="phone-number">Phone Number</label>
-    <input type="tel" class="form-control" id="phone-number" placeholder="###-###-####" name="e-phone" value="$e_phone">
-  </div>
-  <div class="form-group">
-    <input type="submit" class="form-control">
-  </div>
-</form>
-EDIT;
-
-if (isset($_REQUEST['edit']) && ($_REQUEST['edit']) == "edit") {
-  echo $edit_record;
-} else {
-  echo $create_record;
-}
+<?php
+  include_once $_SERVER['DOCUMENT_ROOT'] . '/job_app/web-assets/tpl/app_footer.php';
 ?>

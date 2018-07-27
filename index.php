@@ -11,6 +11,8 @@ $options = array(
   'add_emp' => 'employmentInfo',
   'welcome' => 'welcome',
   'edit' => 'editProfile', //This edit will change the database values.
+  'createeduhistory' => 'createeduhistory', //Create Education History
+  'createemphistory' => 'createemphistory', //Create Employment History
   'logout' => 'logout'
 );
 
@@ -132,13 +134,13 @@ function applicantInfo() {
 // Education Info
 function educationInfo() {
   global $dbh;
-  include_once __DIR__ . '/forms/education.php';
+  include_once __DIR__ . '/forms/education_history.php';
 }
 
 // Employment Info
 function employmentInfo() {
   global $dbh;
-  include_once __DIR__ . '/forms/employment.php';
+  include_once __DIR__ . '/forms/employment_history.php';
 }
 
 //Edit
@@ -198,6 +200,68 @@ EDITPROF;
       echo $_SESSION['email_id'];
       mysqli_error($dbh);
     }
+}
+
+function createeduhistory() {
+  global $dbh;
+
+  $applicant_id = $_SESSION['applicant_id'];
+  $i_name = $_REQUEST['i-name'];
+  $i_type = $_REQUEST['i-type'];
+  $i_start_date = $_REQUEST['i-start-date'];
+  $i_end_date = $_REQUEST['i-end-date'];
+  $i_grad_date = $_REQUEST['i-grad-date'];
+
+  $create_edu_history_sql = <<<SQL
+    INSERT INTO education(applicant_id, i_name, i_type, i_start_date, i_end_date, i_grad_date)
+    VALUES($applicant_id, "$i_name", "$i_type", "$i_start_date", "$i_end_date", "$i_grad_date");
+SQL;
+
+  $create_edu_history_result = $dbh->query($create_edu_history_sql);
+
+  if ($create_edu_history_result) {
+    welcome();
+  } else {
+    echo "Error";
+    mysqli_error($dbh);
+  }
+}
+
+function createemphistory() {
+  global $dbh;
+
+  $applicant_id = $_SESSION['applicant_id'];
+  $e_name = $_REQUEST['e-name'];
+  $e_city = $_REQUEST['e-city'];
+  $e_state = $_REQUEST['e-state'];
+  $e_start_date = $_REQUEST['e-start-date'];
+  $e_end_date = $_REQUEST['e-end-date'];
+  $e_position = $_REQUEST['e-position'];
+  $e_description = $_REQUEST['e-description'];
+  $e_phone = $_REQUEST['e-phone'];
+
+  $create_emp_history_sql = <<<SQL
+    INSERT INTO employment(applicant_id, e_name, e_city, e_state, e_start_date, e_end_date, e_position, e_description, e_phone)
+    VALUES($applicant_id, "$e_name", "$e_city", "$e_state", "$e_start_date", "$e_end_date", "$e_position", "$e_description", "$e_phone");
+SQL;
+
+  $create_emp_history_result = $dbh->query($create_emp_history_sql);
+
+  if ($create_emp_history_result) {
+    welcome();
+  } else {
+    echo "Error <br>";
+    echo "Name: " . $e_name . "<br>";
+    echo "City: " . $e_city . "<br>";
+    echo "State: " . $e_state . "<br>";
+    echo "Start Date: " . $e_start_date . "<br>";
+    echo "End Date: " . $e_end_date . "<br>";
+    echo "Position: " . $e_position . "<br>";
+    echo "Description: " . $e_description . "<br>";
+    echo "Phone: " . $e_phone . "<br>";
+    echo $_SESSION['email_id'];
+    mysqli_error($dbh);
+  }
 }
 
 //Logout
