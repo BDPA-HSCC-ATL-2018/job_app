@@ -34,8 +34,8 @@ function welcomeForm() {
 
   if ( isset($_SESSION['email_id']) && !empty($_SESSION['email_id'])) {
     welcome();
+    echo $_SESSION['email_id'];
   } else {
-    $page_title = "Welcome";
     include_once __DIR__ . '/forms/welcome_form.php';
   }
 }
@@ -43,7 +43,9 @@ function welcomeForm() {
 // Welcome Page - The first page the user sees after logging in; has all the user info
 function welcome() {
   global $dbh;
-  include_once __DIR__ . '/welcome.php';
+  $_SESSION['email_id'] = isset($_REQUEST['email_id']) ? $_REQUEST['email_id'] : null;
+  // echo "Session ID:" . $_SESSION['email_id'];
+  header("Location: /job_app/welcome.php");
 }
 
 // Creates an applicant
@@ -455,7 +457,7 @@ SQL;
 function logout() {
   session_unset();
   session_destroy();
-  welcomeForm();
+  header("Location: /job_app/forms/welcome_form.php");
 }
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/web-assets/tpl/app_footer.php';
