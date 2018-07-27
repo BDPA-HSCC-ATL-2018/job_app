@@ -3,7 +3,11 @@ $page_title = "Processing Application";
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/job_app/web-assets/lib/db.php';
 
-$email_id= isset($_REQUEST['email_id']) ? $_REQUEST['email_id'] : null;
+if (isset($_REQUEST['$email_id'])) {
+  $email_id = $_REQUEST['email_id'];
+} else if (isset($_SESSION['email_id'])) {
+  $email_id = $_SESSION['email_id'];
+}
 
 
 $errors = array();
@@ -35,6 +39,7 @@ HereDoc;
 
 $sql = <<<HereDoc
 select
+  applicant_id,
   first_name,
   middle_name,
   last_name,
@@ -57,11 +62,13 @@ return;
 }
 
 if ( mysqli_num_rows($sth) > 0 ) {
-  $_SESSION['email_id'] = "$email_id";
+  $_SESSION['email_id'] = $email_id; //Setting Email Session Variable
 
     while ($row = mysqli_fetch_array($sth)) {
       foreach( $row AS $key => $val ) {
         $$key = stripslashes($val);
+
+        $_SESSION['applicant_id'] = $row['applicant_id'];
       }
       echo <<<HereDoc
 <div class="alert alert-primary">$first_name, we found your application. Please review progress below.</div>
@@ -71,8 +78,8 @@ if ( mysqli_num_rows($sth) > 0 ) {
       <div class="card-header">Application Progress</div>
       <table class="table table-sm">
         <tr><th>Applicant Profile</th> <td><a class="btn btn-primary" href="/job_app/?action=edit_profile">Edit</a></td></tr>
-        <tr><th>Education</th> <td><a class="btn btn-primary" href="/job_app/?action=add_edu" >Add</a></td></tr>
-        <tr><th>Employment</th> <td><a class="btn btn-primary" href="/job_app/?action=add_emp" >Add</a></td></tr>
+        <tr><th><a href="view_education_records.php">Education</a></th><td><a class="btn btn-primary" href="/job_app/?action=add_edu">Add</a></td></tr>
+        <tr><th><a href="view_employment_records.php">Employment</a></th> <td><a class="btn btn-primary" href="/job_app/?action=add_emp">Add</a></td></tr>
       </table>
     </div>
   </div>
